@@ -3,12 +3,17 @@ package ru.potemkin.coroutineflow.crypto_app
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.launch
 import ru.potemkin.coroutineflow.databinding.ActivityCryptoBinding
 
 class CryptoActivity : AppCompatActivity() {
+
 
     private val binding by lazy {
         ActivityCryptoBinding.inflate(layoutInflater)
@@ -32,32 +37,38 @@ class CryptoActivity : AppCompatActivity() {
         binding.recyclerViewCurrencyPriceList.itemAnimator = null
     }
 
+
     private fun observeViewModel() {
-        viewModel.state.observe(this) {
-            when (it) {
-                is State.Initial -> {
-                    binding.progressBarLoading.isVisible = false
+        lifecycleScope.launch {
+            //repeatOnLifecycle(Lifecycle.State.RESUMED){
+            viewModel.state
+                .flowWithLifecycle(lifecycle,Lifecycle.State.RESUMED)
+                .transform{
+                    Log.d("CryptoViewModel","Transform")
+                    kotlinx.coroutines.delay(10_000)
+                    emit(it)
                 }
-                is State.Loading -> {
-                    binding.progressBarLoading.isVisible = true
+                .collect {
+                    when (it) {
+                        is State.Initial -> {
+                            binding.progressBarLoading.isVisible = false
+                        }
+                        is State.Loading -> {
+                            binding.progressBarLoading.isVisible = true
+                        }
+                        is State.Content -> {
+                            binding.progressBarLoading.isVisible = false
+                            adapter.submitList(it.currencyList)
+                        }
+                    }
                 }
-                is State.Content -> {
-                    binding.progressBarLoading.isVisible = false
-                    adapter.submitList(it.currencyList)
-                }
-            }
+
+
         }
+
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadData()
-    }
 
-    override fun onStop() {
-        super.onStop()
-        viewModel.stopLoading()
-    }
     companion object {
 
         fun newIntent(context: Context) = Intent(context, CryptoActivity::class.java)
