@@ -4,13 +4,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 
 suspend fun main() {
-    getFlowByBuilderFlow().filter { it.isPrime() }
+    val result = getFlowByBuilderFlow().filter { it.isPrime() }
         .filter { it > 20 }
         .map {
             println("Map")
             "Number: $it"
         }
-        .collect { println(it) }
+        .last()
+    println(result)
 }
 
 fun getFlowByFlowOfBuilder(): Flow<Int> {
@@ -18,12 +19,18 @@ fun getFlowByFlowOfBuilder(): Flow<Int> {
 }
 
 fun getFlowByBuilderFlow():Flow<Int>{
-    val numbers = listOf(3, 4, 8, 16, 5, 7, 11, 32, 41, 28, 43, 47, 84, 116, 53, 59, 61)
+    val firstFlow = getFlowByFlowOfBuilder()
     return flow{
-        numbers.forEach{
-            emit(it)
+//        firstFlow.collect(){
+//            println("Emmited from first flow: $it")
+//            emit(it)
+//        }
+//        emitAll(firstFlow)
+        var i = 0
+        while (true){
+            emit(i++)
+            delay(1000)
         }
-
     }
 }
 
