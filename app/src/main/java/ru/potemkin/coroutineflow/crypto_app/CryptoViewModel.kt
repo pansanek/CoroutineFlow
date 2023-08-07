@@ -22,7 +22,7 @@ class CryptoViewModel : ViewModel() {
         }
         .mergeWith(loadingFlow)
 
-    private fun Flow<State>.mergeWith(another: Flow<State>):Flow<State>{
+    private fun <T> Flow<T>.mergeWith(another: Flow<T>):Flow<T>{
         return merge(this,another)
     }
 
