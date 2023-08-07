@@ -9,19 +9,20 @@ import kotlinx.coroutines.launch
 
 class CryptoViewModel : ViewModel() {
 
+
     private val repository = CryptoRepository
+
 
     val state: Flow<State> = repository.getCurrencyList()
         .filter { it.isNotEmpty() }
         .map { State.Content(currencyList = it) as State }
         .onStart {
-            Log.d("CryptoViewModel", "Started")
             emit(State.Loading)
         }
-        .onEach {
-            Log.d("CryptoViewModel", "OnEach")
+
+    fun refreshList() {
+        viewModelScope.launch {
+            repository.refreshList()
         }
-        .onCompletion {
-            Log.d("CryptoViewModel", "Complete")
-        }
+    }
 }
