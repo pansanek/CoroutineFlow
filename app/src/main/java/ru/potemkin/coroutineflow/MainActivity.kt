@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import ru.potemkin.coroutineflow.databinding.ActivityMainBinding
 import ru.potemkin.coroutineflow.Lesson2.UsersActivity
 import ru.potemkin.coroutineflow.crypto_app.CryptoActivity
+import ru.potemkin.coroutineflow.team_score.TeamScoreActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +22,9 @@ class MainActivity : AppCompatActivity() {
         }
         binding.buttonCryptoActivity.setOnClickListener {
             startActivity(CryptoActivity.newIntent(this))
+        }
+        binding.teamScoreActivity.setOnClickListener {
+            startActivity(TeamScoreActivity.newIntent(this))
         }
     }
 }
