@@ -43,9 +43,7 @@ class CryptoActivity : AppCompatActivity() {
 
 
     private fun observeViewModel() {
-
         lifecycleScope.launch {
-            delay(5000)
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.state
                     .collect {
@@ -69,7 +67,6 @@ class CryptoActivity : AppCompatActivity() {
             }
         }
         lifecycleScope.launch{
-            delay(5000)
             viewModel.state
                 .collect {
                     when (it) {

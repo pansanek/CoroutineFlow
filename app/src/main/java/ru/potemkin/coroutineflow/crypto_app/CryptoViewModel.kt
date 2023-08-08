@@ -21,10 +21,10 @@ class CryptoViewModel : ViewModel() {
             emit(State.Loading)
         }
         .mergeWith(loadingFlow)
-        .shareIn(
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
-            replay = 1
+            initialValue = State.Loading
         )
 
     private fun <T> Flow<T>.mergeWith(another: Flow<T>):Flow<T>{
