@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.*
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import ru.potemkin.coroutineflow.databinding.ActivityCryptoBinding
@@ -42,7 +43,9 @@ class CryptoActivity : AppCompatActivity() {
 
 
     private fun observeViewModel() {
+
         lifecycleScope.launch {
+            delay(5000)
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.state
                     .collect {
@@ -62,8 +65,22 @@ class CryptoActivity : AppCompatActivity() {
                             }
                         }
                     }
-            }
 
+            }
+        }
+        lifecycleScope.launch{
+            delay(5000)
+            viewModel.state
+                .collect {
+                    when (it) {
+                        is State.Content -> {
+                            Log.d("CryptiActivity",it.currencyList.joinToString())
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
         }
 
     }
