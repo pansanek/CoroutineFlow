@@ -67,7 +67,7 @@ class CryptoActivity : AppCompatActivity() {
             }
         }
         lifecycleScope.launch{
-            viewModel.state
+            viewModel.state2
                 .collect {
                     when (it) {
                         is State.Content -> {
